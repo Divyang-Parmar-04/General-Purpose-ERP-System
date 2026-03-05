@@ -4,4 +4,8 @@ node_modules
 # Environment variables
 .env
 
+public/temp/*
+public/uploads/*
 
+!public/temp/.gitkeep
+!public/uploads/documents/.gitkeep
