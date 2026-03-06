@@ -75,8 +75,8 @@ const handleVerifyOTPAndSignup = async (req, res) => {
 
             res.clearCookie("auth_token", {
                 httpOnly: true,
-                secure: isProduction,   // true only in production
-                sameSite: isProduction ? "none" : "lax"
+                secure: true,
+                sameSite: "none",
             });
         }
 
@@ -116,8 +116,8 @@ const handleVerifyOTPAndSignup = async (req, res) => {
 
         res.cookie("auth_token", token, {
             httpOnly: true,
-            secure: isProduction,   // true only in production
-            sameSite: isProduction ? "none" : "lax"
+            secure: true,
+            sameSite: "none",
         });
 
 
@@ -149,8 +149,8 @@ const handleLoginUser = async (req, res) => {
         if (req.cookies?.auth_token) {
             res.clearCookie("auth_token", {
                 httpOnly: true,
-                secure: isProduction,   // true only in production
-                sameSite: isProduction ? "none" : "lax"
+                secure: true,
+                sameSite: "none",
             });
         }
 
@@ -184,8 +184,8 @@ const handleLoginUser = async (req, res) => {
 
         res.cookie("auth_token", token, {
             httpOnly: true,
-            secure: isProduction,   // true only in production
-            sameSite: isProduction ? "none" : "lax"
+            secure: true,
+            sameSite: "none",
         });
 
 
@@ -214,8 +214,8 @@ const handleLogoutUser = async (req, res) => {
     try {
         res.clearCookie("auth_token", {
             httpOnly: true,
-            secure: isProduction,   // true only in production
-            sameSite: isProduction ? "none" : "lax"
+            secure: true,
+            sameSite: "none",
         });
 
         return res.json({
