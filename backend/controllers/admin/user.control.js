@@ -87,7 +87,7 @@ const handleCreateEmployee = async (req, res) => {
 const handleUpdateEmployee = async (req, res) => {
     try {
         const { id } = req.params;
-        const { email, status, departmentId, managerId, role } = req.body;
+        const { email, status, departmentId, managerId, role, phone } = req.body;
 
         const oldEmployee = await User.findById(id);
 
@@ -109,6 +109,7 @@ const handleUpdateEmployee = async (req, res) => {
         updated.status = status;
         updated.departmentId = departmentId;
         updated.managerId = managerId || null;
+        updated.phone = phone || ""
 
         updated.role.modules = role.modules || [];
         updated.role.permissions = role.permissions || [];

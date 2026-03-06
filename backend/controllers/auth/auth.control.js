@@ -342,7 +342,7 @@ const handleFetchUserData = async (req, res) => {
             user = await User.findById(req.user._id).populate("businessId")
         }
         else {
-            user = await User.findById(req.user._id)
+            user = await User.findById(req.user._id).populate('managerId')
         }
 
         return res.json({
@@ -354,10 +354,10 @@ const handleFetchUserData = async (req, res) => {
                 email: user?.email,
                 role: user?.role,
                 businessId: user?.businessId,
+                managerId: user?.managerId,
                 status: user?.status,
                 modules: user?.role?.modules || [],
                 permissions: user?.role?.permissions || []
-
             }
         });
     } catch (error) {
