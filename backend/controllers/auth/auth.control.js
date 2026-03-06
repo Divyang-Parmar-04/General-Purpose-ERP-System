@@ -64,21 +64,20 @@ const handleVerifyOTPAndSignup = async (req, res) => {
     try {
         const { name, email, phone, otp, password, role, description } = req.body;
 
-
         const isuser = await User.findOne({ email });
 
         if (isuser) {
             return res.status(400).json({ error: true, message: "User Already exist" });
         }
 
-        if (req.cookies?.auth_token) {
+        // if (req.cookies?.auth_token) {
 
-            res.clearCookie("auth_token", {
-                httpOnly: true,
-                secure: true,
-                sameSite: "none",
-            });
-        }
+        //     res.clearCookie("auth_token", {
+        //         httpOnly: true,
+        //         secure: isProduction,   // true only in production
+        //         sameSite: isProduction ? "none" : "lax"
+        //     });
+        // }
 
         // 1. Validate OTP
         const otpDoc = await Otp.findOne({ email, otp });
@@ -114,16 +113,17 @@ const handleVerifyOTPAndSignup = async (req, res) => {
             "1d"
         );
 
-        res.cookie("auth_token", token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "none",
-        });
+        // res.cookie("auth_token", token, {
+        //     httpOnly: true,
+        //     secure: isProduction,   // true only in production
+        //     sameSite: isProduction ? "none" : "lax"
+        // });
 
 
         res.json({
             success: true,
             message: "account created successful",
+            token:token,
             user: {
                 id: user._id,
                 name: user.name,
@@ -145,15 +145,13 @@ const handleLoginUser = async (req, res) => {
 
         const { email, password } = req.body;
 
-
-        if (req.cookies?.auth_token) {
-            res.clearCookie("auth_token", {
-                httpOnly: true,
-                secure: true,
-                sameSite: "none",
-            });
-        }
-
+        // if (req.cookies?.auth_token) {
+        //     res.clearCookie("auth_token", {
+        //         httpOnly: true,
+        //         secure: isProduction,   // true only in production
+        //         sameSite: isProduction ? "none" : "lax"
+        //     });
+        // }
 
         // 1 Find user
         let user = await User.findOne({ email: email })
@@ -182,16 +180,17 @@ const handleLoginUser = async (req, res) => {
             "1d"
         );
 
-        res.cookie("auth_token", token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "none",
-        });
+        // res.cookie("auth_token", token, {
+        //     httpOnly: true,
+        //     secure: isProduction,   // true only in production
+        //     sameSite: isProduction ? "none" : "lax"
+        // });
 
 
         res.json({
             success: true,
             message: "Login successful",
+            token: token,
             user: {
                 id: user?._id,
                 phone: user?.phone,
@@ -214,8 +213,8 @@ const handleLogoutUser = async (req, res) => {
     try {
         res.clearCookie("auth_token", {
             httpOnly: true,
-            secure: true,
-            sameSite: "none",
+            secure: isProduction,   // true only in production
+            sameSite: isProduction ? "none" : "lax"
         });
 
         return res.json({
@@ -232,7 +231,6 @@ const handleLogoutUser = async (req, res) => {
 };
 
 // Forgor Password
-
 
 const handleSendOTPForPasswordChange = async (req, res) => {
     try {

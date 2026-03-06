@@ -18,8 +18,6 @@ app.use(cors({
   credentials: true
 }));
 
-
-
 // Middleware
 app.use(express.json());
 app.use(cookieParser())
