@@ -70,7 +70,6 @@ const AdminDashboard = () => {
       const res = await getDashboardStats();
       if (res.success) {
         setData(res.data);
-        console.log(res.data)
       } else {
         setError(res.message || "Failed to load dashboard data");
         toast.error(res.message || "Dashboard load failed");

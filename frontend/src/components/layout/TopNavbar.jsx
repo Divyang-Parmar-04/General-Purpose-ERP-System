@@ -46,8 +46,10 @@ const TopNavbar = ({ collapsed, setCollapsed, user }) => {
 
   const handleLogout = async () => {
     try {
-      const res = await sendLogoutRequestAPI()
-      toast.success(res.message)
+      // const res = await sendLogoutRequestAPI()
+      // toast.success(res.message)
+      localStorage.removeItem('token')
+      toast.success("Logout Successfully")
       setOpen(false);
       setTimeout(() => { navigate("/") }, 500)
       setTimeout(() => { dispatch(logout()); }, 1000);

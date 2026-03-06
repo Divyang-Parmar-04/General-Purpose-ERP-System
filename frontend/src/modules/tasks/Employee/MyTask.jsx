@@ -261,7 +261,7 @@ function MyTasks() {
                 {/* Tasks Table wrapper */}
                 <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg overflow-x-auto shadow-sm w-[90vw] md:w-[100%] scrollbar-thin">
                     <div className="">
-                        <table className="w-auto text-sm text-left min-w-0 sm:min-w-[800px]">
+                        <table className="w-auto text-sm text-left min-w-0 sm:min-w-[100%]">
                             {/* allow width to be determined by content; scrollbar appears when content exceeds container */}
                             <thead>
                                 <tr className="bg-gray-50 dark:bg-gray-800/60 border-b whitespace-nowrap">

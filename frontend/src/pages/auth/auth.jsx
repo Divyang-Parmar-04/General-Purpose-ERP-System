@@ -52,6 +52,7 @@ const Auth = () => {
 
                 if (res.success) {
                     toast.success("Login successful!");
+                    localStorage.setItem("token", res.token)
 
                     dispatch(
                         loginSuccess({
@@ -103,7 +104,7 @@ const Auth = () => {
         e.preventDefault();
 
         setIsLoading(true);
-        
+
         const payload = {
             name: formData.name,
             email: formData.email,
@@ -121,6 +122,7 @@ const Auth = () => {
 
         if (res?.success) {
             toast.success("Account is Created");
+            localStorage.setItem("token", res.token)
             dispatch(
                 loginSuccess({
                     user: res.user,
@@ -137,7 +139,6 @@ const Auth = () => {
         }
 
     };
-
 
     // Forgot Password : 
 

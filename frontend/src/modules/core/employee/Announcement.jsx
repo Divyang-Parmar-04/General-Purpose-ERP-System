@@ -23,7 +23,7 @@ const Announcement = () => {
         try {
             const res = await getEmployeeAnnouncementsAPI();
             if (res.success) {
-                console.log(res)
+
                 setAnnouncements(res.announcements || []);
 
             } else {

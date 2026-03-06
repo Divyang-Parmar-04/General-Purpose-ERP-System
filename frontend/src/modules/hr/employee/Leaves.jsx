@@ -23,7 +23,6 @@ const LeavePage = () => {
     setLoading(true);
     try {
       const res = await getAllLeavesAPI();
-      console.log(res.data)
       setLeaves(res.data || []);
     } catch (err) {
       toast.error(err.message || "Failed to load leave requests");
