@@ -1,15 +1,7 @@
 
-const nodemailer = require("nodemailer");
+const sgMail = require("@sendgrid/mail");
 
-const transporter = nodemailer.createTransport({
-  host: "smtp-relay.brevo.com",
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.BREVO_SMTP_USER,
-    pass: process.env.BREVO_SMTP_PASS
-  }
-});
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 //SEND MAIL
 const sendMail = async ({ to, action, data }) => {
@@ -55,15 +47,19 @@ const sendMail = async ({ to, action, data }) => {
 
       throw new Error("Invalid mail action");
   }
+
   try {
-    const res = await transporter.sendMail({
-      from: `"ERP System" <${process.env.EMAIL_USER}>`,
+    const msg = {
       to,
+      from: process.env.EMAIL_USER,
       subject,
       html
-    });
+    };
+
+    await sgMail.send(msg);
+    console.log("Mail sent successfully");
   } catch (error) {
-    console.log("mailError :", error)
+    console.log("mailError :", error.response.body.errors)
   }
 };
 
