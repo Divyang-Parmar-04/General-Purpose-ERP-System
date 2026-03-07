@@ -8,6 +8,12 @@ const transporter = nodemailer.createTransport({
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+  // logger: true,
+  // debug: true,
+  // host:process.env.HOST,
+  // port:process.env.EMAIL_PORT,
+  // secure:process.env.SECURE,
+
 });
 
 //SEND MAIL
@@ -54,13 +60,16 @@ const sendMail = async ({ to, action, data }) => {
 
       throw new Error("Invalid mail action");
   }
-
-  await transporter.sendMail({
-    from: `"ERP System" <${process.env.EMAIL_USER}>`,
-    to,
-    subject,
-    html
-  });
+  try {
+    const res = await transporter.sendMail({
+      from: `"ERP System" <${process.env.EMAIL_USER}>`,
+      to,
+      subject,
+      html
+    });
+  } catch (error) {
+   console.log("mailError :",error)
+  }
 };
 
 module.exports = sendMail;

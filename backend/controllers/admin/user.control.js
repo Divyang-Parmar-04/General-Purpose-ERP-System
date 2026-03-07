@@ -31,11 +31,34 @@ const handleCreateEmployee = async (req, res) => {
     try {
         const { name, email, phone, departmentId, managerId, dateOfJoining, role } = req.body;
 
+        const user = await User.findOne({ email })
+
+        if (user) {
+            return res.status(400).json({ error: true, message: "User Already exist" });
+        }
+
         // 1. Generate Random Password
         const rawPassword = crypto.randomBytes(4).toString("hex"); // 8 chars
         const hashedPassword = await bcrypt.hash(rawPassword, 10);
 
-        // 2. Create User
+    
+        // 2. Send Credentials Email
+        try {
+            await sendMail({
+                to: email,
+                action: "SEND_CREDENTIALS",
+                data: {
+                    email: email,
+                    password: rawPassword
+                }
+            });
+
+        } catch (mailError) {
+            console.log("Mail failed but user created:", mailError);
+            return res.json({ error: "mailerror" })
+        }
+
+        // 3. Create User
         const employee = await User.create({
             name,
             email,
@@ -56,28 +79,15 @@ const handleCreateEmployee = async (req, res) => {
             }
         });
 
-        // 3. Update Department Count
+        // 4. Update Department Count
         if (departmentId) {
             await Department.findByIdAndUpdate(departmentId, {
                 $inc: { totalEmployees: 1 }
             });
         }
 
-        // 4. Send Credentials Email
-        try {
-            await sendMail({
-                to: email,
-                action: "SEND_CREDENTIALS",
-                data: {
-                    email: email,
-                    password: rawPassword
-                }
-            });
-        } catch (mailError) {
-            console.log("Mail failed but user created:", mailError);
-        }
-
         res.status(201).json({ success: true, employee });
+
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: error.message });
@@ -172,6 +182,7 @@ const handledeleteEmployee = async (req, res) => {
         });
 
     } catch (err) {
+        // console.log(err)
         res.status(500).json({
             success: false,
             message: "Server error"

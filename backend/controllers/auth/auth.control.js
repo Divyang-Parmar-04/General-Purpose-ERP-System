@@ -123,7 +123,7 @@ const handleVerifyOTPAndSignup = async (req, res) => {
         res.json({
             success: true,
             message: "account created successful",
-            token:token,
+            token: token,
             user: {
                 id: user._id,
                 name: user.name,
@@ -158,6 +158,9 @@ const handleLoginUser = async (req, res) => {
 
         if (user?.role?.name === "ADMIN") {
             user = await user.populate("businessId")
+        }
+        else {
+            user = await User.findById(req.user._id).populate('managerId')
         }
 
         if (!user) {
@@ -196,6 +199,7 @@ const handleLoginUser = async (req, res) => {
                 phone: user?.phone,
                 name: user?.name,
                 email: user?.email,
+                managerId: user?.managerId,
                 role: user?.role,
                 businessId: user?.businessId,
                 status: user?.status,
@@ -363,10 +367,65 @@ const handleFetchUserData = async (req, res) => {
         console.error("Get Current User Error:", error);
         return res.status(500).json({
             success: false,
-            message: "Failed to fetch user"
+        });
+    }
+}
+
+const handleUpdateAdminProfile = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const { email, phone } = req.body;
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        // Ensure only ADMIN can perform this 
+        if (user.role.name !== "ADMIN" && user.role.name !== "SUPER_ADMIN") {
+            return res.status(403).json({
+                success: false,
+                message: "Access restricted to admins only"
+            });
+        }
+
+        // Check if email is being changed and if it's already taken
+        if (email && email !== user.email) {
+            const existingUser = await User.findOne({ email });
+            if (existingUser) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Email already in use"
+                });
+            }
+            user.email = email;
+        }
+
+        if (phone) {
+            user.phone = phone;
+        }
+
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Profile updated successfully",
+            user: {
+                id: user._id,
+                email: user.email,
+                phone: user.phone,
+                name: user.name,
+                role: user.role
+            }
+        });
+    } catch (error) {
+        console.error("Update Admin Profile Error:", error);
+        res.status(500).json({
+            success: false,
+            message: error.message || "Failed to update profile"
         });
     }
 }
 
 
-module.exports = { handleVerifyOTP, handleSendOTPForPasswordChange, handleUpdatePasssword, handleSingupUser, handleLoginUser, handleVerifyOTPAndSignup, handleLogoutUser, handleFetchUserData }
+module.exports = { handleVerifyOTP, handleSendOTPForPasswordChange, handleUpdatePasssword, handleSingupUser, handleLoginUser, handleVerifyOTPAndSignup, handleLogoutUser, handleFetchUserData, handleUpdateAdminProfile }

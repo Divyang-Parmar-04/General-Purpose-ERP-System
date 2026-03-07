@@ -167,11 +167,61 @@ const handleUpdateTaxSettings = async (req, res) => {
   }
 };
 
+const handleDeleteBusiness = async (req, res) => {
+  try {
+    const businessId = req.user.businessId;
+
+    if (!businessId) {
+      return res.status(404).json({
+        success: false,
+        message: "Business not found"
+      });
+    }
+
+    // 1. Delete all documents that have a 'businessId' field matching this business
+    const mongoose = require("mongoose");
+    const models = mongoose.models;
+
+    const deletePromises = [];
+
+    for (const modelName in models) {
+      const Model = models[modelName];
+      // Check if the schema has a businessId field
+      if (Model.schema.paths.businessId) {
+        deletePromises.push(Model.deleteMany({ businessId: businessId }));
+      }
+    }
+
+    // Wait for all associated data to be deleted
+    await Promise.all(deletePromises);
+
+    // 2. Finally delete the business record itself
+    await Business.findByIdAndDelete(businessId);
+
+    // 3. Clear the businessId from any users that might have it (though they should be deleted by the loop above if they were part of the business)
+    // Actually, the loop above DELETES users with that businessId. 
+    // If the Admin is a user with that businessId, they are now deleted.
+
+    return res.status(200).json({
+      success: true,
+      message: "Business and all associated data have been permanently deleted."
+    });
+
+  } catch (error) {
+    console.error("Delete Business Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Failed to delete business"
+    });
+  }
+};
+
 module.exports = {
   handleCreateNewBusiness,
   handleGetBusiness,
   handleUpdateBusinessProfile,
   handleUpdateModules,
   handleUpdateCurrency,
-  handleUpdateTaxSettings
+  handleUpdateTaxSettings,
+  handleDeleteBusiness
 };

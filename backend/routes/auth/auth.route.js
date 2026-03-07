@@ -1,5 +1,5 @@
 const express = require("express");
-const { handleSingupUser, handleVerifyOTPAndSignup, handleLoginUser, handleFetchUserData, handleLogoutUser, handleSendOTPForPasswordChange, handleUpdatePasssword, handleVerifyOTP } = require("../../controllers/auth/auth.control");
+const { handleVerifyOTP, handleSendOTPForPasswordChange, handleUpdatePasssword, handleSingupUser, handleLoginUser, handleFetchUserData, handleLogoutUser, handleUpdateAdminProfile, handleVerifyOTPAndSignup } = require("../../controllers/auth/auth.control");
 
 const { authMiddleware } = require("../../middleware/auth/authMiddleware");
 
@@ -26,15 +26,16 @@ router.get('/user/logout', handleLogoutUser)
 
 router.post("/user/send-otp", handleSendOTPForPasswordChange)
 
-router.post("/user/password/verify-otp" , handleVerifyOTP)
+router.post("/user/password/verify-otp", handleVerifyOTP)
 
-router.post("/user/password/update" , handleUpdatePasssword)
+router.post("/user/password/update", handleUpdatePasssword)
 
 
 // Fetch Data : 
 
 
 router.put("/user/profile", authMiddleware, handleUpdateUserProfile);
+router.put("/user/profile/admin", authMiddleware, handleUpdateAdminProfile);
 
 router.get("/me", authMiddleware, handleFetchUserData)
 
