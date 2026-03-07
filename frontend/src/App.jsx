@@ -27,11 +27,9 @@ function App() {
 
   useEffect(() => {
 
-
     const autoLogin = async () => {
+      
       const data = await fetchCurrentUserAPI();
-
-
       if (data?.user) {
 
         dispatch(
@@ -40,7 +38,6 @@ function App() {
             role: data?.user?.role?.name,
           })
         );
-
 
       } else {
 

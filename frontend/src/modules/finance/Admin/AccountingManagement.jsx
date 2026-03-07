@@ -73,14 +73,16 @@ const AccountingManagement = () => {
               </p>
             </div>
           </div>
+          <div>
 
-          <button
-            onClick={fetchData}
-            className="p-2.5 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            title="Refresh data"
-          >
-            <RefreshCw size={18} className="text-gray-600 dark:text-gray-400" />
-          </button>
+            <button
+              onClick={fetchData}
+              className="p-2.5 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              title="Refresh data"
+            >
+              <RefreshCw size={18} className="text-gray-600 dark:text-gray-400" />
+            </button>
+          </div>
         </div>
 
         {/* Tabs */}
@@ -90,8 +92,8 @@ const AccountingManagement = () => {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`px-6 py-2.5 text-sm font-medium rounded-md transition-colors ${activeTab === tab.id
-                  ? 'bg-white dark:bg-gray-900 shadow-sm text-gray-900 dark:text-white'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                ? 'bg-white dark:bg-gray-900 shadow-sm text-gray-900 dark:text-white'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                 }`}
             >
               {tab.label}

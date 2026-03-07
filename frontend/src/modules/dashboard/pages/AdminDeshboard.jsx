@@ -129,31 +129,32 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pb-12">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-5 sm:pt-8 space-y-6 sm:space-y-10">
+      <div className="max-w-7xl mx-auto  sm:px-6 lg:px-8  sm:pt-8 space-y-6 sm:space-y-10">
 
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-5 pb-4 sm:pb-6 border-b border-gray-200 dark:border-gray-800">
           <div className="flex items-center gap-3 sm:gap-4">
             <div className="p-2 sm:p-3 bg-blue-600/10 rounded-lg">
-              <LayoutDashboard className="w-5 h-5 sm:w-7 sm:h-7 text-blue-600 dark:text-blue-500" />
+              <LayoutDashboard className="w-7 h-7 text-blue-600 dark:text-blue-500" />
             </div>
             <div>
               <h1 className="text-2xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                 Dashboard
               </h1>
-              <p className="text-[10px] sm:text-sm text-gray-600 dark:text-gray-400 mt-0.5 sm:mt-1">
+              <p className="text-[12px] sm:text-sm text-gray-600 dark:text-gray-400 mt-0.5 sm:mt-1">
                 Real-time overview of key metrics
               </p>
             </div>
           </div>
+          <div>
 
-          <button
-            onClick={fetchStats}
-            className="flex items-center justify-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 bg-white dark:bg-gray-800 border dark:text-white border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-xs sm:text-sm font-medium"
-          >
-            <RefreshCw size={16} className="sm:w-[18px] sm:h-[18px]" />
-            Refresh
-          </button>
+            <button
+              onClick={fetchStats}
+              className="p-2.5 border dark:text-white cursor-pointer border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+            >
+              <RefreshCw size={18} className="sm:w-[18px] sm:h-[18px]" />
+            </button>
+          </div>
         </div>
 
         {/* KPI Cards */}
@@ -176,7 +177,7 @@ const AdminDashboard = () => {
 
         {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-          
+
           {/* Revenue Trend */}
           {/* {enabledModules?.sales && charts?.revenueTrend?.length > 0 && (
             <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 sm:p-6 shadow-sm">
@@ -392,7 +393,7 @@ const AdminDashboard = () => {
 
         {/* Recent Activities & Detailed Lists */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-          
+
           {/* Recent Tasks */}
           {enabledModules?.tasks && lists?.recentTasks?.length > 0 && (
             <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 sm:p-6 shadow-sm">
@@ -407,10 +408,9 @@ const AdminDashboard = () => {
                       <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate group-hover:text-blue-600 transition-colors">{task.title}</p>
                       <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">{task.project || "General Task"}</p>
                     </div>
-                    <span className={`ml-3 px-2 py-0.5 text-[10px] font-bold rounded-md uppercase tracking-wider ${
-                        task.status === "Done" ? "bg-green-50 text-green-700 border border-green-100 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800/50"
+                    <span className={`ml-3 px-2 py-0.5 text-[10px] font-bold rounded-md uppercase tracking-wider ${task.status === "Done" ? "bg-green-50 text-green-700 border border-green-100 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800/50"
                         : task.status === "In Progress" ? "bg-blue-50 text-blue-700 border border-blue-100 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800/50"
-                        : "bg-gray-50 text-gray-600 border border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700"
+                          : "bg-gray-50 text-gray-600 border border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700"
                       }`}>
                       {task.status}
                     </span>
@@ -434,8 +434,7 @@ const AdminDashboard = () => {
                       <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate group-hover:text-blue-600 transition-colors">{project.name}</p>
                       <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5 truncate pr-4">{project.description || "Active project"}</p>
                     </div>
-                    <span className={`ml-3 px-2 py-0.5 text-[10px] font-bold rounded-md uppercase tracking-wider ${
-                        project.status === "COMPLETED" ? "bg-green-50 text-green-700 border border-green-100 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800/50"
+                    <span className={`ml-3 px-2 py-0.5 text-[10px] font-bold rounded-md uppercase tracking-wider ${project.status === "COMPLETED" ? "bg-green-50 text-green-700 border border-green-100 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800/50"
                         : "bg-blue-50 text-blue-700 border border-blue-100 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800/50"
                       }`}>
                       {project.status.split('_').join(' ')}
@@ -460,8 +459,7 @@ const AdminDashboard = () => {
                       <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate group-hover:text-blue-600 transition-colors">{lead.contact.name}</p>
                       <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">{lead.organizationName || "Indiviual Lead"}</p>
                     </div>
-                    <span className={`ml-3 px-2 py-0.5 text-[10px] font-bold rounded-md uppercase tracking-wider ${
-                        lead.status === "WON" ? "bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400"
+                    <span className={`ml-3 px-2 py-0.5 text-[10px] font-bold rounded-md uppercase tracking-wider ${lead.status === "WON" ? "bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400"
                         : lead.status === "LOST" ? "bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400" : "bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
                       }`}>
                       {lead.status}
@@ -509,8 +507,7 @@ const AdminDashboard = () => {
                       <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate group-hover:text-blue-600 transition-colors">#{tx.referenceNumber || "EXP-001"}</p>
                       <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">{tx.description?.substring(0, 30) || "No description"}...</p>
                     </div>
-                    <span className={`ml-3 px-2 py-0.5 text-[10px] font-bold rounded-md uppercase tracking-wider ${
-                        tx.status === "COMPLETED" ? "bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400"
+                    <span className={`ml-3 px-2 py-0.5 text-[10px] font-bold rounded-md uppercase tracking-wider ${tx.status === "COMPLETED" ? "bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400"
                         : "bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
                       }`}>
                       {tx.transactionType}
@@ -535,8 +532,7 @@ const AdminDashboard = () => {
                       <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate group-hover:text-blue-600 transition-colors">{po.poNumber}</p>
                       <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">Vendor: {po.vendorId?.name || "Global Vendor"}</p>
                     </div>
-                    <span className={`ml-3 px-2 py-0.5 text-[10px] font-bold rounded-md uppercase tracking-wider ${
-                        po.status === "RECEIVED" ? "bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400"
+                    <span className={`ml-3 px-2 py-0.5 text-[10px] font-bold rounded-md uppercase tracking-wider ${po.status === "RECEIVED" ? "bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400"
                         : "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400"
                       }`}>
                       {po.status}

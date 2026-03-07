@@ -197,7 +197,7 @@ function Tasks() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-5 pb-6 border-b border-gray-200 dark:border-gray-800">
           <div className="flex items-center gap-4">
             <div className="p-2 sm:p-3 bg-blue-600/10 rounded-lg">
-              <ClipboardList className="w-6 h-6 sm:w-7 sm:h-7 text-blue-600 dark:text-blue-500" />
+              <ClipboardList className="w-7 h-7 text-blue-600 dark:text-blue-500" />
             </div>
             <div>
               <h1 className="text-2xl sm:text-2xl font-semibold text-gray-900 dark:text-gray-100">Tasks</h1>
@@ -210,7 +210,7 @@ function Tasks() {
           <div className="flex items-center gap-3">
             <button
               onClick={fetchData}
-              className="p-2 sm:p-2.5 border cursor-pointer border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+               className="p-2.5 border dark:text-white cursor-pointer border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
               title="Refresh"
             >
               <RefreshCw size={18} className="text-gray-600 dark:text-gray-400" />

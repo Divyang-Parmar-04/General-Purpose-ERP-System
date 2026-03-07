@@ -52,6 +52,7 @@ const Auth = () => {
 
                 if (res.success) {
                     toast.success("Login successful!");
+
                     localStorage.setItem("token", res.token)
 
                     dispatch(
@@ -75,7 +76,12 @@ const Auth = () => {
 
                 }
                 else {
-                    toast.error("Invalid Credentials")
+                    if (res.message === "Your account is Suspended") {
+                        toast.error("Your account is Suspended")
+                    }
+                    else {
+                        toast.error("Invalid Credentials")
+                    }
                 }
 
             } else {

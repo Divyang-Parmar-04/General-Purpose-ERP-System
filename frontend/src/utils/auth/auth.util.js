@@ -59,7 +59,6 @@ const fetchCurrentUserAPI = async () => {
   }
 };
 
-
 // Password Reset : 
 
 const sendOTPRequest = async (data) => {

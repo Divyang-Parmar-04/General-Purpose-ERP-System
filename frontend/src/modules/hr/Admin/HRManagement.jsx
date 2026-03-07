@@ -65,7 +65,7 @@ function HRManagement() {
     }
   };
 
-  const handleDeleteCancelledLeaves = async (id)=>{
+  const handleDeleteCancelledLeaves = async (id) => {
     try {
       const result = await deleteLeave(id);
       if (result.success) {
@@ -110,14 +110,16 @@ function HRManagement() {
               </p>
             </div>
           </div>
+          <div>
 
-          <button
-            onClick={fetchData}
-            className="p-2.5 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            title="Refresh data"
-          >
-            <RefreshCw size={18} className="text-gray-600 dark:text-gray-400" />
-          </button>
+            <button
+              onClick={fetchData}
+              className="p-2.5 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              title="Refresh data"
+            >
+              <RefreshCw size={18} className="text-gray-600 dark:text-gray-400" />
+            </button>
+          </div>
         </div>
 
         {/* Tabs */}

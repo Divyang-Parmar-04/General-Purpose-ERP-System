@@ -17,6 +17,7 @@ function Employees() {
     const [departments, setDepartments] = useState([]);
     const [modulesList, setModules] = useState([]);
 
+    const [isEdit, setIsEdit] = useState(false)
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState("ALL");
     const [showForm, setShowForm] = useState(false);
@@ -130,8 +131,12 @@ function Employees() {
             };
 
             if (editingEmployee) {
-                await updateEmployeeAPI(editingEmployee._id, payload);
-                toast.success("Employee updated");
+                const emp = await updateEmployeeAPI(editingEmployee._id, payload);
+                if (emp?.error) {
+                    toast.error(emp.error);
+                } else {
+                    toast.success("Employee updated");
+                }
             } else {
                 const emp = await createEmployeeAPI(payload);
                 if (emp?.error == "mailerror") {
@@ -156,6 +161,7 @@ function Employees() {
 
     const handleEdit = (emp) => {
         setEditingEmployee(emp);
+        setIsEdit(true)
 
         setForm({
             name: emp.name || "",
@@ -314,6 +320,7 @@ function Employees() {
                                     onClick={() => {
                                         setShowForm(false);
                                         resetForm();
+                                        setIsEdit(false)
                                     }}
                                     className="p-2 hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-800 rounded-full"
                                 >
@@ -415,21 +422,21 @@ function Employees() {
                                             className="w-full p-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                                         />
                                     </div>
-
-                                    <div>
-                                        <label className="block text-xs font-bold uppercase text-gray-500 dark:text-gray-400 mb-1">
-                                            Status
-                                        </label>
-                                        <select
-                                            value={form.status}
-                                            onChange={(e) => setForm({ ...form, status: e.target.value })}
-                                            className="w-full p-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none"
-                                        >
-                                            <option value="ACTIVE">Active</option>
-                                            <option value="INACTIVE">Inactive</option>
-                                            <option value="SUSPENDED">Suspended</option>
-                                        </select>
-                                    </div>
+                                    {isEdit && (
+                                        <div>
+                                            <label className="block text-xs font-bold uppercase text-gray-500 dark:text-gray-400 mb-1">
+                                                Status
+                                            </label>
+                                            <select
+                                                value={form.status}
+                                                onChange={(e) => setForm({ ...form, status: e.target.value })}
+                                                className="w-full p-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                                            >
+                                                <option value="REACTIVATE">reactivate</option>
+                                                <option value="SUSPEND">suspend</option>
+                                            </select>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-gray-200 dark:border-gray-700">
@@ -496,6 +503,7 @@ function Employees() {
                                         onClick={() => {
                                             setShowForm(false);
                                             resetForm();
+                                            setIsEdit(false)
                                         }}
                                         className="flex-1 py-3 cursor-pointer bg-gray-100 dark:bg-gray-800 rounded-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                                     >

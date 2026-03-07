@@ -154,7 +154,7 @@ const Projects = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 p-5 md:p-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950  md:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
 
         {/* Header */}
@@ -164,7 +164,7 @@ const Projects = () => {
               <Folder className="w-7 h-7 text-blue-600 dark:text-blue-500" />
             </div>
             <div>
-              <h1 className="text-xl md:text-2xl font-semibold text-gray-900 dark:text-gray-100">
+              <h1 className="text-2xl md:text-2xl font-semibold text-gray-900 dark:text-gray-100">
                 Projects
               </h1>
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
