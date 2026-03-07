@@ -1,4 +1,4 @@
-import { Save, Loader2 ,RefreshCw } from "lucide-react";
+import { Save, Loader2, RefreshCw, Trash2, AlertTriangle, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -7,9 +7,11 @@ import {
   updateModulesAPI,
   updateCurrencyAPI,
   updateTaxSettingsAPI,
+  deleteBusinessAPI,
 } from "../../../utils/admin/business.util";
 import { toast } from "react-hot-toast";
-import { setIsModuleChange } from "../../../store/slices/auth.slice";
+import { setIsModuleChange, logout } from "../../../store/slices/auth.slice";
+import { useNavigate } from "react-router-dom";
 
 const Section = ({ title, onSave, children, loading }) => (
   <div className="border border-gray-200 dark:border-gray-800 rounded-lg p-6 bg-white dark:bg-gray-900 space-y-6">
@@ -46,6 +48,7 @@ const Input = ({ label, name, value, onChange, placeholder, type = "text" }) => 
 
 function BusinessProfile() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
   const isAdmin = user?.role?.name === "ADMIN" || user?.role?.name === "SUPER_ADMIN";
 
@@ -66,6 +69,10 @@ function BusinessProfile() {
     currencySettings: { code: "", symbol: "", name: "" },
     taxSettings: { enabled: false, type: "", label: "", percentage: 0 },
   });
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
+  const deleteTargetText = "DELETE BUSINESS";
 
   useEffect(() => {
     if (isAdmin) {
@@ -162,6 +169,24 @@ function BusinessProfile() {
     const res = await updateTaxSettingsAPI({ taxSettings: business.taxSettings });
     if (res.success) toast.success("Tax settings updated");
     else toast.error(res.message || "Update failed");
+    setLoading(false);
+  };
+
+  const handleDeleteBusiness = async () => {
+    if (deleteConfirmText !== deleteTargetText) {
+      toast.error("Please type the confirmation text exactly");
+      return;
+    }
+
+    setLoading(true);
+    const res = await deleteBusinessAPI();
+    if (res.success) {
+      toast.success("Business and all data deleted successfully");
+      dispatch(logout());
+      navigate("/login");
+    } else {
+      toast.error(res.message || "Deletion failed");
+    }
     setLoading(false);
   };
 
@@ -307,11 +332,10 @@ function BusinessProfile() {
               key={mod}
               disabled={mod === "core"}
               onClick={() => toggleModule(mod)}
-              className={`px-4 py-3 text-sm font-medium rounded-lg border transition-all ${
-                business.modules[mod]
+              className={`px-4 py-3 text-sm font-medium rounded-lg border transition-all ${business.modules[mod]
                   ? "bg-blue-600 border-blue-600 text-white"
                   : "bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-blue-500"
-              } ${mod === "core" ? "opacity-50 cursor-not-allowed" : ""}`}
+                } ${mod === "core" ? "opacity-50 cursor-not-allowed" : ""}`}
             >
               {mod.replace(/([A-Z])/g, " $1").trim()}
             </button>
@@ -383,6 +407,90 @@ function BusinessProfile() {
           )}
         </div>
       </Section>
+
+      {/* Danger Zone */}
+      <div className="mt-12 border border-red-200 dark:border-red-900/50 rounded-lg overflow-hidden">
+        <div className="bg-red-50 dark:bg-red-900/10 p-6 border-b border-red-200 dark:border-red-900/50">
+          <div className="flex items-center gap-3 text-red-700 dark:text-red-400">
+            <AlertTriangle className="w-6 h-6" />
+            <h3 className="text-lg font-semibold">Danger Zone</h3>
+          </div>
+          <p className="mt-2 text-sm text-red-600 dark:text-red-400/80">
+            Once you delete a business, there is no going back. This will permanently remove all data, including employees, tasks, reports, and configurations associated with this business.
+          </p>
+        </div>
+        <div className="p-6 bg-white dark:bg-gray-900">
+          <button
+            onClick={() => setShowDeleteModal(true)}
+            className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-all shadow-sm hover:shadow-red-500/20"
+          >
+            Delete Entire Business
+          </button>
+        </div>
+      </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-gray-900 rounded-xl max-w-md w-full shadow-2xl border border-gray-200 dark:border-gray-800 animate-in zoom-in-95 duration-200">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Confirm Deletion</h3>
+                <button
+                  onClick={() => {
+                    setShowDeleteModal(false);
+                    setDeleteConfirmText("");
+                  }}
+                  className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              <div className="p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-900/40 rounded-lg mb-6">
+                <div className="flex gap-3">
+                  <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-500 shrink-0 mt-0.5" />
+                  <p className="text-sm text-amber-800 dark:text-amber-300">
+                    This action is irreversible. All employees, tasks, and data will be permanently lost.
+                  </p>
+                </div>
+              </div>
+
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                To confirm, please type <span className="font-bold text-red-600 dark:text-red-400">{deleteTargetText}</span> below:
+              </p>
+
+              <input
+                type="text"
+                value={deleteConfirmText}
+                onChange={(e) => setDeleteConfirmText(e.target.value)}
+                placeholder="Type confirmation text..."
+                className="w-full px-4 py-2 border border-red-200 dark:border-red-900/40 rounded-lg bg-red-50/20 dark:bg-red-900/10 focus:ring-2 focus:ring-red-500 outline-none mb-6 text-gray-900 dark:text-white"
+              />
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    setShowDeleteModal(false);
+                    setDeleteConfirmText("");
+                  }}
+                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeleteBusiness}
+                  disabled={deleteConfirmText !== deleteTargetText || loading}
+                  className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-red-500/10 flex items-center justify-center gap-2"
+                >
+                  {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 size={16} />}
+                  Delete Now
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

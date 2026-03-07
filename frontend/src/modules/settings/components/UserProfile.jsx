@@ -2,6 +2,7 @@ import { Save, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { updateUserProfileAPI } from "../../../utils/admin/user.util";
+import { updateAdminProfileAPI } from "../../../utils/auth/auth.util";
 import { toast } from "react-hot-toast";
 
 function UserProfile() {
@@ -11,13 +12,17 @@ function UserProfile() {
   const [profile, setProfile] = useState({
     name: "",
     phone: "",
+    email: "",
   });
 
+  const isAdmin = user?.role?.name === "ADMIN" 
+  
   useEffect(() => {
     if (user) {
       setProfile({
         name: user?.name || "",
         phone: user?.phone ? String(user.phone) : "",
+        email: user?.email || "",
       });
     }
   }, [user]);
@@ -29,7 +34,12 @@ function UserProfile() {
 
   const handleSaveProfile = async () => {
     setLoading(true);
-    const res = await updateUserProfileAPI(profile);
+    let res;
+    if (isAdmin) {
+      res = await updateAdminProfileAPI({ email: profile.email, phone: profile.phone });
+    } else {
+      res = await updateUserProfileAPI({ name: profile.name, phone: profile.phone });
+    }
     if (res.success) {
       toast.success("Profile updated successfully");
     } else {
@@ -88,6 +98,22 @@ function UserProfile() {
             className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition-colors"
           />
         </div>
+
+        {isAdmin && (
+          <div className="space-y-1.5">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Email Address (Admin Only)
+            </label>
+            <input
+              type="email"
+              name="email"
+              value={profile.email}
+              onChange={handleProfileChange}
+              placeholder="admin@example.com"
+              className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition-colors"
+            />
+          </div>
+        )}
       </div>
     </div>
   );

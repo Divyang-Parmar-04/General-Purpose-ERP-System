@@ -57,3 +57,12 @@ export const updateTaxSettingsAPI = async (data) => {
     return error.response?.data || { success: false, message: "Failed to update tax settings" };
   }
 };
+
+export const deleteBusinessAPI = async () => {
+  try {
+    const res = await api.delete("/api/admin/business/profile");
+    return res.data;
+  } catch (error) {
+    return error.response?.data || { success: false, message: "Failed to delete business" };
+  }
+};

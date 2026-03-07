@@ -4,7 +4,7 @@ import api from "../../service/api";
 //sending new Registration Request
 const sendOTPRequestAPI = async (data) => {
   try {
-    const response = await api.post("/api/auth/user/signup",data);
+    const response = await api.post("/api/auth/user/signup", data);
     return response.data;
   } catch (error) {
     return {
@@ -29,7 +29,7 @@ const sendSignupRequestAPI = async (data) => {
 //login
 const sendLoginRequestAPI = async (data) => {
   try {
-    const response = await api.post("/api/auth/user/login",data)
+    const response = await api.post("/api/auth/user/login", data)
     // console.log(response)
     return response.data
   } catch (error) {
@@ -62,9 +62,9 @@ const fetchCurrentUserAPI = async () => {
 
 // Password Reset : 
 
-const sendOTPRequest = async (data) =>{
-   try {
-    const res = await api.post("/api/auth/user/send-otp",data);
+const sendOTPRequest = async (data) => {
+  try {
+    const res = await api.post("/api/auth/user/send-otp", data);
     return res.data;
   } catch (err) {
     console.log(err)
@@ -72,9 +72,9 @@ const sendOTPRequest = async (data) =>{
   }
 }
 
-const sendVerifyOTP = async (data) =>{
-   try {
-    const res = await api.post("/api/auth/user/password/verify-otp",data);
+const sendVerifyOTP = async (data) => {
+  try {
+    const res = await api.post("/api/auth/user/password/verify-otp", data);
     return res.data;
   } catch (err) {
     console.log(err)
@@ -82,9 +82,9 @@ const sendVerifyOTP = async (data) =>{
   }
 }
 
-const sendNewPassword = async (data) =>{
-   try {
-    const res = await api.post("/api/auth/user/password/update",data);
+const sendNewPassword = async (data) => {
+  try {
+    const res = await api.post("/api/auth/user/password/update", data);
     return res.data;
   } catch (err) {
     console.log(err)
@@ -92,4 +92,14 @@ const sendNewPassword = async (data) =>{
   }
 }
 
-export { sendOTPRequestAPI, sendLoginRequestAPI, fetchCurrentUserAPI, sendLogoutRequestAPI , sendSignupRequestAPI , sendOTPRequest , sendVerifyOTP , sendNewPassword }
+const updateAdminProfileAPI = async (data) => {
+  try {
+    const res = await api.put("/api/auth/user/profile/admin", data);
+    return res.data;
+  } catch (err) {
+    console.log(err)
+    return null;
+  }
+}
+
+export { sendOTPRequestAPI, sendLoginRequestAPI, fetchCurrentUserAPI, sendLogoutRequestAPI, sendSignupRequestAPI, sendOTPRequest, sendVerifyOTP, sendNewPassword, updateAdminProfileAPI }

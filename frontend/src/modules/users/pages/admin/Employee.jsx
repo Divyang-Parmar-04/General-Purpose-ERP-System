@@ -27,7 +27,7 @@ function Employees() {
         name: "",
         email: "",
         departmentId: "",
-        phone:"",
+        phone: "",
         managerId: "",
         dateOfJoining: "",
         status: "INACTIVE",
@@ -54,14 +54,14 @@ function Employees() {
             setDepartments(deptsRes?.data || deptsRes || []);
 
             let availableModules = [];
-            if (user?.role?.name === "ADMIN") {
-                for (let [key, value] of Object.entries(user?.businessId?.modules || {})) {
-                    if (value) availableModules.push(key.toUpperCase());
-                }
-            } else {
-                availableModules = user?.role?.modules || [];
-            }
-            setModules(availableModules);
+            // if (user?.role?.name === "ADMIN") {
+            //     for (let [key, value] of Object.entries(user?.businessId?.modules || {})) {
+            //         if (value) availableModules.push(key.toUpperCase());
+            //     }
+            // } else {
+            //     availableModules = user?.role?.modules || [];
+            // }
+            setModules(["PROCUREMENT", "INVENTORY"]);
         } catch (error) {
             toast.error("Failed to load data");
         } finally {
@@ -120,7 +120,7 @@ function Employees() {
                 managerId: form.managerId || null,
                 dateOfJoining: form.dateOfJoining || null,
                 status: form.status,
-                phone:form.phone,
+                phone: form.phone,
                 role: {
                     name: "EMPLOYEE",
                     domain: form.role.domain,
@@ -133,8 +133,15 @@ function Employees() {
                 await updateEmployeeAPI(editingEmployee._id, payload);
                 toast.success("Employee updated");
             } else {
-                await createEmployeeAPI(payload);
-                toast.success("Employee created");
+                const emp = await createEmployeeAPI(payload);
+                if (emp?.error == "mailerror") {
+                    toast.error("failed to send email");
+                }
+                else if (emp?.error) {
+                    toast.error("Employee Already Exist");
+                } else {
+                    toast.success("Employee created");
+                }
             }
 
             setShowForm(false);
@@ -157,7 +164,7 @@ function Employees() {
             managerId: emp.managerId?._id || emp.managerId || "",
             dateOfJoining: emp.dateOfJoining?.slice(0, 10) || "",
             status: emp.status || "INACTIVE",
-            phone:emp.phone || '',
+            phone: emp.phone || '',
             role: {
                 name: emp.role?.name || "EMPLOYEE",
                 domain: emp.role?.domain || "",
@@ -177,6 +184,7 @@ function Employees() {
             toast.success("Employee deleted");
             fetchData();
         } catch (err) {
+            console.log(err)
             toast.error("Delete failed");
         }
     };
@@ -343,7 +351,7 @@ function Employees() {
                                         />
                                     </div>
 
-                                     <div>
+                                    <div>
                                         <label className="block text-xs font-bold uppercase text-gray-500 dark:text-gray-400 mb-1">
                                             Phone
                                         </label>
@@ -461,7 +469,7 @@ function Employees() {
                                     </div>
                                 </div>
 
-                                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                                {/* <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
                                     <label className="block text-xs font-bold uppercase text-gray-500 dark:text-gray-400 mb-1">
                                         Permissions
                                     </label>
@@ -480,7 +488,7 @@ function Employees() {
                                             </button>
                                         ))}
                                     </div>
-                                </div>
+                                </div> */}
 
                                 <div className="flex gap-4 pt-6 border-t border-gray-200 dark:border-gray-700">
                                     <button

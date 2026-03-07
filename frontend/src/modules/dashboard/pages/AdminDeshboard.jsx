@@ -33,7 +33,7 @@ const DARK_CHART_COLOR = "#3b82f6"; // bg-blue-500
 
 const STAT_CONFIG = [
   { key: "employees", label: "Total Employees", icon: Users, color: "text-blue-600 dark:text-blue-500", modules: ["hr"] },
-  { key: "revenue", label: "Total Revenue", icon: Wallet, color: "text-blue-600 dark:text-blue-500", modules: ["sales"] },
+  // { key: "revenue", label: "Total Revenue", icon: Wallet, color: "text-blue-600 dark:text-blue-500", modules: ["sales"] },
   { key: "pendingTasks", label: "Pending Tasks", icon: ClipboardList, color: "text-blue-600 dark:text-blue-500", modules: ["tasks"] },
   { key: "activeProjects", label: "Active Projects", icon: Target, color: "text-blue-600 dark:text-blue-500", modules: ["projects"] },
   { key: "totalProducts", label: "Total Products", icon: Package, color: "text-blue-600 dark:text-blue-500", modules: ["inventory"] },
@@ -138,7 +138,7 @@ const AdminDashboard = () => {
               <LayoutDashboard className="w-5 h-5 sm:w-7 sm:h-7 text-blue-600 dark:text-blue-500" />
             </div>
             <div>
-              <h1 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">
+              <h1 className="text-2xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                 Dashboard
               </h1>
               <p className="text-[10px] sm:text-sm text-gray-600 dark:text-gray-400 mt-0.5 sm:mt-1">
@@ -178,7 +178,7 @@ const AdminDashboard = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
           
           {/* Revenue Trend */}
-          {enabledModules?.sales && charts?.revenueTrend?.length > 0 && (
+          {/* {enabledModules?.sales && charts?.revenueTrend?.length > 0 && (
             <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 sm:p-6 shadow-sm">
               <div className="flex items-center justify-between mb-4 sm:mb-6">
                 <h2 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
@@ -213,7 +213,7 @@ const AdminDashboard = () => {
                 </ResponsiveContainer>
               </div>
             </div>
-          )}
+          )} */}
 
           {/* Task Status Distribution */}
           {enabledModules?.tasks && charts?.taskStatus && (
