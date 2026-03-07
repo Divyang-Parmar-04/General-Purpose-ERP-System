@@ -70,15 +70,6 @@ const handleVerifyOTPAndSignup = async (req, res) => {
             return res.status(400).json({ error: true, message: "User Already exist" });
         }
 
-        // if (req.cookies?.auth_token) {
-
-        //     res.clearCookie("auth_token", {
-        //         httpOnly: true,
-        //         secure: isProduction,   // true only in production
-        //         sameSite: isProduction ? "none" : "lax"
-        //     });
-        // }
-
         // 1. Validate OTP
         const otpDoc = await Otp.findOne({ email, otp });
 
@@ -113,13 +104,6 @@ const handleVerifyOTPAndSignup = async (req, res) => {
             "1d"
         );
 
-        // res.cookie("auth_token", token, {
-        //     httpOnly: true,
-        //     secure: isProduction,   // true only in production
-        //     sameSite: isProduction ? "none" : "lax"
-        // });
-
-
         res.json({
             success: true,
             message: "account created successful",
@@ -145,14 +129,6 @@ const handleLoginUser = async (req, res) => {
 
         const { email, password } = req.body;
 
-        // if (req.cookies?.auth_token) {
-        //     res.clearCookie("auth_token", {
-        //         httpOnly: true,
-        //         secure: isProduction,   // true only in production
-        //         sameSite: isProduction ? "none" : "lax"
-        //     });
-        // }
-
         // 1 Find user
         let user = await User.findOne({ email: email })
 
@@ -160,7 +136,7 @@ const handleLoginUser = async (req, res) => {
             user = await user.populate("businessId")
         }
         else {
-            user = await User.findById(req.user._id).populate('managerId')
+            user = await user.populate('managerId')
         }
 
         if (!user) {
@@ -182,13 +158,6 @@ const handleLoginUser = async (req, res) => {
             },
             "1d"
         );
-
-        // res.cookie("auth_token", token, {
-        //     httpOnly: true,
-        //     secure: isProduction,   // true only in production
-        //     sameSite: isProduction ? "none" : "lax"
-        // });
-
 
         res.json({
             success: true,

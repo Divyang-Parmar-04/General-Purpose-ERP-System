@@ -3,19 +3,15 @@ const nodemailer = require("nodemailer");
 
 //TRANSPORTER
 const transporter = nodemailer.createTransport({
-  // service: "gmail",
-  host:process.env.HOST,
-  port:process.env.EMAIL_PORT,
-  secure:process.env.SECURE,
-  
+
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true, 
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    pass: process.env.EMAIL_PASS, 
   },
-  // logger: true,
-  // debug: true,
-  
-  connectionTimeout: 10000,
+  connectionTimeout: 10000, // 10 seconds
   greetingTimeout: 10000,
   socketTimeout: 10000,
 
@@ -73,7 +69,7 @@ const sendMail = async ({ to, action, data }) => {
       html
     });
   } catch (error) {
-   console.log("mailError :",error)
+    console.log("mailError :", error)
   }
 };
 
