@@ -47,17 +47,17 @@ const handleCreateItem = async (req, res) => {
             }
         }
 
-        // Parse pricing data
+        // Parse pricing data from both flat and bracketed fields
         const pricing = {
-            costPrice: parseFloat(req.body["pricing[costPrice]"]) || 0,
-            sellingPrice: parseFloat(req.body["pricing[sellingPrice]"]) || 0,
-            currency: req.body["pricing[currency]"] || "INR"
+            costPrice: parseFloat(req.body.costPrice || req.body["pricing[costPrice]"]) || 0,
+            sellingPrice: parseFloat(req.body.sellingPrice || req.body["pricing[sellingPrice]"]) || 0,
+            currency: req.body.currency || req.body["pricing[currency]"] || "INR"
         };
 
         // Parse tax profile data
         const taxProfile = {
-            taxRate: parseFloat(req.body["taxProfile[taxRate]"]) || 0,
-            inclusive: req.body["taxProfile[inclusive]"] === "true" || false
+            taxRate: parseFloat(req.body.taxRate || req.body["taxProfile[taxRate]"]) || 0,
+            inclusive: (req.body.taxInclusive || req.body["taxProfile[inclusive]"]) === "true" || false
         };
 
         // Create inventory item
@@ -224,25 +224,25 @@ const handleUpdateItem = async (req, res) => {
             newImages = newImages.filter(img => !toDelete.includes(img.publicId));
         }
 
-        // Parse pricing
+        // Parse pricing - preferring new flat fields, falling back to old bracketed ones, then item data
         const pricing = {
-            costPrice: req.body["pricing[costPrice]"]
-                ? parseFloat(req.body["pricing[costPrice]"])
-                : item.pricing.costPrice,
-            sellingPrice: req.body["pricing[sellingPrice]"]
-                ? parseFloat(req.body["pricing[sellingPrice]"])
-                : item.pricing.sellingPrice,
-            currency: req.body["pricing[currency]"] || item.pricing.currency
+            costPrice: (req.body.costPrice !== undefined ? parseFloat(req.body.costPrice) :
+                (req.body["pricing[costPrice]"] !== undefined ? parseFloat(req.body["pricing[costPrice]"]) :
+                    item.pricing.costPrice)),
+            sellingPrice: (req.body.sellingPrice !== undefined ? parseFloat(req.body.sellingPrice) :
+                (req.body["pricing[sellingPrice]"] !== undefined ? parseFloat(req.body["pricing[sellingPrice]"]) :
+                    item.pricing.sellingPrice)),
+            currency: req.body.currency || req.body["pricing[currency]"] || item.pricing.currency
         };
 
         // Parse tax profile
         const taxProfile = {
-            taxRate: req.body["taxProfile[taxRate]"]
-                ? parseFloat(req.body["taxProfile[taxRate]"])
-                : item.taxProfile.taxRate,
-            inclusive: req.body["taxProfile[inclusive]"] !== undefined
-                ? req.body["taxProfile[inclusive]"] === "true"
-                : item.taxProfile.inclusive
+            taxRate: (req.body.taxRate !== undefined ? parseFloat(req.body.taxRate) :
+                (req.body["taxProfile[taxRate]"] !== undefined ? parseFloat(req.body["taxProfile[taxRate]"]) :
+                    item.taxProfile.taxRate)),
+            inclusive: (req.body.taxInclusive !== undefined ? (req.body.taxInclusive === "true" || req.body.taxInclusive === true) :
+                (req.body["taxProfile[inclusive]"] !== undefined ? (req.body["taxProfile[inclusive]"] === "true" || req.body["taxProfile[inclusive]"] === true) :
+                    item.taxProfile.inclusive))
         };
 
         // Update item
