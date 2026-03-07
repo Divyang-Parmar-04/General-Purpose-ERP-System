@@ -39,7 +39,7 @@ const CRMManagement = () => {
     assignedTo: '',
     estimatedValue: { amount: 0, currency: 'INR' },
   });
-  
+
 
   const statusOptions = ['NEW', 'CONTACTED', 'QUALIFIED', 'PROPOSAL', 'NEGOTIATION', 'WON', 'LOST'];
   const priorityOptions = ['LOW', 'MEDIUM', 'HIGH', 'URGENT'];
@@ -212,11 +212,10 @@ const CRMManagement = () => {
         <div className="inline-flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1 border border-gray-200 dark:border-gray-700 overflow-x-auto w-[90vw] md:w-[100%]">
           <button
             onClick={() => setFilterStatus('ALL')}
-            className={`px-5 py-2.5 text-sm font-medium rounded-md transition-colors ${
-              filterStatus === 'ALL'
+            className={`px-5 py-2.5 text-sm font-medium rounded-md transition-colors ${filterStatus === 'ALL'
                 ? 'bg-white dark:bg-gray-900 shadow-sm text-gray-900 dark:text-white'
                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
-            }`}
+              }`}
           >
             All Leads
           </button>
@@ -224,11 +223,10 @@ const CRMManagement = () => {
             <button
               key={status}
               onClick={() => setFilterStatus(status)}
-              className={`px-5 py-2.5 text-sm font-medium rounded-md transition-colors whitespace-nowrap ${
-                filterStatus === status
+              className={`px-5 py-2.5 text-sm font-medium rounded-md transition-colors whitespace-nowrap ${filterStatus === status
                   ? 'bg-white dark:bg-gray-900 shadow-sm text-gray-900 dark:text-white'
                   : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
-              }`}
+                }`}
             >
               {status}
             </button>

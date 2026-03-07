@@ -210,7 +210,7 @@ function Tasks() {
           <div className="flex items-center gap-3">
             <button
               onClick={fetchData}
-               className="p-2.5 border dark:text-white cursor-pointer border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="p-2.5 border dark:text-white cursor-pointer border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
               title="Refresh"
             >
               <RefreshCw size={18} className="text-gray-600 dark:text-gray-400" />

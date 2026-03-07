@@ -118,12 +118,12 @@ const AddInventoryItem = ({ onClose, onSuccess, editingItem }) => {
     formData.append("unitOfMeasure", form.unitOfMeasure.trim());
     formData.append("valuationMethod", form.valuationMethod);
 
-    formData.append("pricing[costPrice]", form.costPrice || 0);
-    formData.append("pricing[sellingPrice]", form.sellingPrice || 0);
-    formData.append("pricing[currency]", form.currency);
+    formData.append("costPrice", form.costPrice || 0);
+    formData.append("sellingPrice", form.sellingPrice || 0);
+    formData.append("currency", form.currency || "INR");
 
-    formData.append("taxProfile[taxRate]", form.taxRate || 0);
-    formData.append("taxProfile[inclusive]", form.taxInclusive);
+    formData.append("taxRate", form.taxRate || 0);
+    formData.append("taxInclusive", form.taxInclusive);
 
     formData.append("trackInventory", form.trackInventory);
     formData.append("allowNegativeStock", form.allowNegativeStock);

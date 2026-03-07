@@ -203,7 +203,7 @@ const SalesManagement = () => {
             </button>
             <button
               className="flex items-center cursor-pointer gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
-              onClick={()=>setShowAddModal(true)}
+              onClick={() => setShowAddModal(true)}
             >
               <Plus size={18} />
               New Invoice
@@ -219,8 +219,8 @@ const SalesManagement = () => {
                 key={status}
                 onClick={() => setFilterStatus(status)}
                 className={`px-5 py-2.5 text-sm font-medium rounded-md transition-colors whitespace-nowrap ${filterStatus === status
-                    ? 'bg-white dark:bg-gray-900 shadow-sm text-gray-900 dark:text-white'
-                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                  ? 'bg-white dark:bg-gray-900 shadow-sm text-gray-900 dark:text-white'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                   }`}
               >
                 {status === 'ALL' ? 'All Orders' : status.replace('_', ' ')}
@@ -241,7 +241,7 @@ const SalesManagement = () => {
         </div>
 
         {/* Table */}
-        <div className=" w-[90vw] md:w-[100%] bg-white dark:bg-gray-900 border  border-gray-200 dark:border-gray-800 rounded-lg overflow-x-auto dark:text-white">
+        <div className="w-[90vw] md:w-[100%] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg overflow-x-auto dark:text-white">
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-gray-50 dark:bg-gray-800/60 border-b border-gray-200 dark:border-gray-800">
@@ -249,7 +249,7 @@ const SalesManagement = () => {
                 <th className="p-4 text-left font-medium text-gray-600 dark:text-gray-300">Invoice / Items</th>
                 <th className="p-4 text-center font-medium text-gray-600 dark:text-gray-300">Amount</th>
                 <th className="p-4 text-center font-medium text-gray-600 dark:text-gray-300">Status</th>
-                <th className="p-4 text-right font-medium text-gray-600 dark:text-gray-300">Actions</th>
+                <th className="p-4 text-center font-medium text-gray-600 dark:text-gray-300 ">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
@@ -267,7 +267,7 @@ const SalesManagement = () => {
                 </tr>
               ) : (
                 filteredSales.map((sale) => (
-                  <tr key={sale._id} className="hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors overflow-auto">
+                  <tr key={sale._id} className="hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors group">
                     <td className="p-4">
                       <div className="font-medium text-gray-900 dark:text-gray-100">
                         {sale.orderNumber || '—'}
@@ -299,51 +299,43 @@ const SalesManagement = () => {
                       </span>
                     </td>
 
-                    <td className="p-4 text-right">
-                      <div className="relative">
+                    <td className="p-4 text-center font-medium text-base">
+                      <div className="flex items-center justify-center gap-2">
                         <button
-                          onClick={() => setOpenMenuId(openMenuId === sale._id ? null : sale._id)}
-                          className="p-2 text-gray-500 hover:text-gray-900 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                          onClick={() => handleViewInvoice(sale)}
+                          className="p-2 text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white dark:hover:bg-gray-700 rounded-lg transition-colors"
+                          title="View Invoice"
                         >
-                          <MoreVertical size={18} />
+                          <FileText size={18} />
                         </button>
 
-                        {openMenuId === sale._id && (
-                          <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50">
-                            <button
-                              onClick={() => handleViewInvoice(sale)}
-                              className="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2 border-b border-gray-100 dark:border-gray-700"
-                            >
-                              <FileText size={16} />
-                              View Invoice
-                            </button>
-                            {sale.status !== 'PAID' && sale.status !== 'CANCELLED' && (
-                              <button
-                                onClick={() => handleEditInvoice(sale)}
-                                className="w-full text-left px-4 py-2.5 text-sm text-blue-600 dark:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2 border-b border-gray-100 dark:border-gray-700"
-                              >
-                                <Edit2 size={16} />
-                                Edit Invoice
-                              </button>
-                            )}
-                            {sale.status !== 'PAID' && sale.status !== 'CANCELLED' && (
-                              <button
-                                onClick={() => handleStatusUpdate(sale._id, 'PAID')}
-                                className="w-full text-left px-4 py-2.5 text-sm text-green-600 dark:text-green-400 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2 border-b border-gray-100 dark:border-gray-700"
-                              >
-                                <CheckCircle2 size={16} />
-                                Mark as Paid
-                              </button>
-                            )}
-                            <button
-                              onClick={() => handleDeleteInvoice(sale._id)}
-                              className="w-full text-left px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2"
-                            >
-                              <Trash2 size={16} />
-                              Delete Invoice
-                            </button>
-                          </div>
+                        {sale.status !== 'PAID' && sale.status !== 'CANCELLED' && (
+                          <button
+                            onClick={() => handleEditInvoice(sale)}
+                            className="p-2 text-gray-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-white dark:hover:bg-gray-700 rounded-lg transition-colors"
+                            title="Edit Invoice"
+                          >
+                            <Edit2 size={18} />
+                          </button>
                         )}
+
+                        {sale.status !== 'PAID' && sale.status !== 'CANCELLED' && (
+                          <button
+                            onClick={() => handleStatusUpdate(sale._id, 'PAID')}
+                            className="p-2 text-gray-500 hover:text-green-600 dark:hover:text-green-400 hover:bg-white dark:hover:bg-gray-700 rounded-lg transition-colors"
+                            title="Mark as Paid"
+                          >
+                            <CheckCircle2 size={18} />
+                          </button>
+                        )}
+
+                        <button
+                          onClick={() => handleDeleteInvoice(sale._id)}
+                          className="p-2 text-gray-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-white dark:hover:bg-gray-700 rounded-lg transition-colors"
+                          title="Delete Invoice"
+                        >
+                          <Trash2 size={18} />
+                        </button>
                       </div>
                     </td>
                   </tr>

@@ -150,6 +150,7 @@ const InventoryManagement = () => {
           <table className="w-full text-sm text-left">
             <thead>
               <tr className="bg-gray-50 dark:bg-gray-800/60 border-b">
+                <th className="p-4 font-medium text-gray-700 dark:text-gray-300 w-16">Image</th>
                 <th className="p-4 font-medium text-gray-700 dark:text-gray-300">Product / SKU</th>
                 <th className="p-4 font-medium text-gray-700 dark:text-gray-300">Pricing</th>
                 <th className="p-4 font-medium text-gray-700 dark:text-gray-300 text-center">Stock</th>
@@ -166,6 +167,19 @@ const InventoryManagement = () => {
               ) : (
                 filteredItems.map((item) => (
                   <tr key={item._id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                    <td className="p-4">
+                      {item.images && item.images.length > 0 ? (
+                        <img
+                          src={item.images[0].url}
+                          alt={item.name}
+                          className="w-15 h-10 rounded-lg object-contain border border-gray-200 dark:border-gray-700"
+                        />
+                      ) : (
+                        <div className="w-15 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-400 border border-gray-200 dark:border-gray-700">
+                          <Package size={20} />
+                        </div>
+                      )}
+                    </td>
                     <td className="p-4">
                       <div className="font-medium">{item.name}</div>
                       <div className="text-xs text-gray-500 mt-1">SKU: {item.sku || "—"}</div>

@@ -41,43 +41,57 @@ const AddInvoice = ({ isOpen, onClose, leads, onInvoiceCreated, invoice = null, 
     }
   }, [mode, invoice, isOpen]);
 
-
-  // Calculate line totals
+  // Calculate line totals and summary whenever items or discount changes
   useEffect(() => {
-
+    // 1. Calculate line totals for each item if they haven't been calculated or need update
+    // We do this to ensure internal consistency
     const newItems = formData.items.map(item => {
-      const itemTotal = item.quantity * item.unitPrice;
-      const taxAmount = (itemTotal * (item.taxCategory === "GST" ? 0.18 : item.taxCategory === "VAT" ? 0.15 : 0.10)) || 0;
+      const itemTotal = (parseFloat(item.quantity) || 0) * (parseFloat(item.unitPrice) || 0);
+      let taxRate = 0;
+      if (item.taxCategory === "GST") taxRate = 0.18;
+      else if (item.taxCategory === "VAT") taxRate = 0.15;
+      else if (item.taxCategory === "PST") taxRate = 0.10;
+      else taxRate = 0; // "None" or other
+
+      const taxAmount = parseFloat((itemTotal * taxRate).toFixed(2));
+      const totalPrice = parseFloat((itemTotal + taxAmount).toFixed(2));
+
       return {
         ...item,
-        taxAmount: parseFloat(taxAmount.toFixed(2)),
-        totalPrice: parseFloat((itemTotal + taxAmount).toFixed(2))
+        taxAmount,
+        totalPrice
       };
     });
 
-    // Calculate subtotal and apply discount
+    // 2. Calculate summary totals
     const subTotal = parseFloat(
-      newItems.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0).toFixed(2)
+      newItems.reduce((sum, item) => sum + (parseFloat(item.quantity) || 0) * (parseFloat(item.unitPrice) || 0), 0)
+        .toFixed(2)
     );
 
     let discountAmount = 0;
     if (formData.discount.type === "percentage") {
-      discountAmount = (subTotal * formData.discount.value) / 100;
+      discountAmount = (subTotal * (parseFloat(formData.discount.value) || 0)) / 100;
     } else {
-      discountAmount = formData.discount.value;
+      discountAmount = parseFloat(formData.discount.value) || 0;
     }
 
     const totalTax = parseFloat(newItems.reduce((sum, item) => sum + item.taxAmount, 0).toFixed(2));
     const grandTotal = parseFloat((subTotal + totalTax - discountAmount).toFixed(2));
 
-    setFormData(prev => ({
-      ...prev,
-      items: newItems,
-      subTotal,
-      grandTotal
-    }));
+    // 3. Only update state if values have actually changed to avoid infinite loop
+    const itemsChanged = JSON.stringify(newItems) !== JSON.stringify(formData.items);
+    const totalsChanged = subTotal !== formData.subTotal || grandTotal !== formData.grandTotal;
 
-  }, []);
+    if (itemsChanged || totalsChanged) {
+      setFormData(prev => ({
+        ...prev,
+        items: newItems,
+        subTotal,
+        grandTotal
+      }));
+    }
+  }, [formData.items, formData.discount]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -89,7 +103,8 @@ const AddInvoice = ({ isOpen, onClose, leads, onInvoiceCreated, invoice = null, 
 
   const handleItemChange = (index, field, value) => {
     const newItems = [...formData.items];
-    newItems[index] = { ...newItems[index], [field]: isNaN(value) ? value : parseFloat(value) };
+    const val = (field === "quantity" || field === "unitPrice") ? value : value;
+    newItems[index] = { ...newItems[index], [field]: val };
     setFormData(prev => ({ ...prev, items: newItems }));
   };
 
