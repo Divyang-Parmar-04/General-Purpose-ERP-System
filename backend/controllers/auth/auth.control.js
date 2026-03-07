@@ -132,11 +132,8 @@ const handleLoginUser = async (req, res) => {
         // 1 Find user
         let user = await User.findOne({ email: email })
 
-        if (user?.role?.name === "ADMIN") {
-            user = await user.populate("businessId")
-        }
-        else {
-            user = await user.populate('managerId')
+        if (user?.status === "SUSPEND") {
+            return res.status(400).json({ error: true, message: "Your account is Suspended" });
         }
 
         if (!user) {
@@ -149,6 +146,13 @@ const handleLoginUser = async (req, res) => {
             return res.status(401).json({ error: true, message: "Invalid credentials" });
         }
 
+        if (user?.role?.name === "ADMIN") {
+            user = await user.populate("businessId")
+        }
+        else {
+            user = await user.populate('managerId')
+        }
+
         //  Generate token
         const token = generateToken(
             {
@@ -158,6 +162,10 @@ const handleLoginUser = async (req, res) => {
             },
             "1d"
         );
+
+        await User.findByIdAndUpdate(user._id, {
+            status: "ACTIVE"
+        })
 
         res.json({
             success: true,
@@ -171,7 +179,7 @@ const handleLoginUser = async (req, res) => {
                 managerId: user?.managerId,
                 role: user?.role,
                 businessId: user?.businessId,
-                status: user?.status,
+                status: "ACTIVE",
                 modules: user?.role?.modules || [],
                 permissions: user?.role?.permissions || []
             }
@@ -184,11 +192,10 @@ const handleLoginUser = async (req, res) => {
 
 const handleLogoutUser = async (req, res) => {
     try {
-        res.clearCookie("auth_token", {
-            httpOnly: true,
-            secure: isProduction,   // true only in production
-            sameSite: isProduction ? "none" : "lax"
-        });
+       
+        await User.findByIdAndUpdate(req?.user?._id, {
+            status: "INACTIVE"
+        })
 
         return res.json({
             success: true,

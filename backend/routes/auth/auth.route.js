@@ -20,7 +20,7 @@ router.post("/user/login", handleLoginUser)
 
 //Logout : 
 
-router.get('/user/logout', handleLogoutUser)
+router.get('/user/logout', authMiddleware, handleLogoutUser)
 
 //Updated Password : 
 

@@ -68,7 +68,7 @@ const handleCreateEmployee = async (req, res) => {
             managerId: managerId || null,
             dateOfJoining: dateOfJoining || new Date(),
             businessId: req.user.businessId,
-            status: "INACTIVE",
+            status:"INACTIVE",
             role: {
                 name: "EMPLOYEE",
                 description: role?.description || "Company Employee",
@@ -101,6 +101,10 @@ const handleUpdateEmployee = async (req, res) => {
 
         const oldEmployee = await User.findById(id);
 
+         if(oldEmployee.status === "ACTIVE"){
+            return res.status(400).json({ error: "Employee is Active, Cannot Update"});
+        }
+
         // Handle department change count
         if (departmentId && oldEmployee.departmentId?.toString() !== departmentId) {
             // Decr old
@@ -126,10 +130,6 @@ const handleUpdateEmployee = async (req, res) => {
         updated.role.domain = role.domain || "";
 
         await updated.save();
-
-
-        // console.log(updated)
-
 
         res.status(200).json({ success: true, employee: updated });
     } catch (error) {
