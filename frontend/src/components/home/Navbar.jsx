@@ -15,7 +15,6 @@ const Navbar = () => {
         { name: 'Pricing', path: '/pricing' },
     ];
 
-
     const { user } = useSelector((state) => state.auth)
     const navigate = useNavigate()
 
@@ -26,7 +25,7 @@ const Navbar = () => {
     }
 
     return (
-        <nav className="fixed w-full bg-white dark:bg-gray-900 z-50 border-b border-gray-100 dark:border-gray-800 transition-colors duration-300 font-sans">
+        <nav className="fixed w-full  bg-white/20  dark:bg-gray-900/20 z-50 transition-colors duration-300 font-sans">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16 items-center">
                     {/* Logo */}

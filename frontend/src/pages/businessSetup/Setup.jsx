@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import {useDispatch} from 'react-redux'
-import { useNavigate, } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
+import { Navigate, useNavigate, } from 'react-router-dom';
 import {
     Building2,
     Briefcase, MapPin,
@@ -25,10 +25,18 @@ const Setup = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch()
 
+    const { role, isAuthenticated } = useSelector((state) => state.auth)
 
     const [isLoading, setIsLoading] = useState(false);
     const [logoPreview, setLogoPreview] = useState(null);
     const [logoFile, setLogoFile] = useState(null);
+
+
+    // useEffect(() => {
+    //     if (role !== 'ADMIN' || !isAuthenticated) {
+    //         navigate("/unauthorized")
+    //     }
+    // }, [])
 
     const [formData, setFormData] = useState({
         companyName: '',
